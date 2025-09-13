@@ -4,6 +4,42 @@
 
 → A CSV file with **1,000,000 lines was processed in 10 seconds**.
 
+### Demonstration Video
+
+https://drive.google.com/file/d/1uzdckLmwARua7hyYC7IX6UsgPffW-CZd/view?usp=sharing
+
+### SQL Schema 
+
+```sql
+CREATE TABLE BACKGROUND_JOB (
+    ID INT PRIMARY KEY,       
+    STATUS VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE EXCHANGE (
+    ID INT PRIMARY KEY IDENTITY,      
+    CURRENCY_CODE VARCHAR(3) NOT NULL, 
+    JOB_ID INT NOT NULL,                
+    RATE_TO_USD DECIMAL(18, 6) NOT NULL
+    CONSTRAINT FK_EXCHANGE_JOB FOREIGN KEY (JOB_ID) REFERENCES BACKGROUND_JOB(ID) 
+);
+    
+CREATE TABLE PRODUCT (
+    ID INT PRIMARY KEY IDENTITY,  
+    NAME NVARCHAR(350) NOT NULL,  
+    PRICE DECIMAL(18, 2) NOT NULL, 
+    EXPIRATION DATE NOT NULL, 
+    JOB_ID INT NOT NULL,      
+    CONSTRAINT FK_PRODUCT_JOB FOREIGN KEY (JOB_ID) REFERENCES BACKGROUND_JOB(ID) 
+);
+```
+
+### Docker
+
+```shell
+docker run --env=ACCEPT_EULA=Y --env=SA_PASSWORD=DB_Password -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
+```
+
 ### Backend
 
 → Built using Clean Architecture, DDD, and SOLID principles.
